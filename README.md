@@ -41,4 +41,21 @@ The bridge expects the smart plug to publish on these topics (where `smart-plug-
 
 All settings are optional. Without a config file, the bridge connects to `localhost:1883` and subscribes to `smart-plug-pv/#`.
 
-See [`mqtt-solar-bridge.conf.example`](mqtt-solar-bridge.conf.example) for all options.
+Copy [`mqtt-solar-bridge.conf.example`](mqtt-solar-bridge.conf.example) to `/mnt/data/tsc/mqtt-solar-bridge.conf` and uncomment what you need:
+
+```sh
+# MQTT broker host and port (defaults: localhost, 1883)
+MQTT_HOST=192.168.1.10
+MQTT_PORT=1883
+
+# Credentials (leave commented out if not required)
+MQTT_USER=myuser
+MQTT_PASS=mypassword
+
+# Base topic of the smart plug (default: smart-plug-pv)
+MQTT_BASE_TOPIC=smart-plug-pv
+
+# TLS/MQTTS — set to true to enable; default port becomes 8883
+#MQTT_TLS=false
+#MQTT_CAFILE=/mnt/data/tsc/certs/ca.crt
+```
