@@ -22,20 +22,36 @@ The bridge expects the smart plug to publish on these topics (where `smart-plug-
 | `smart-plug-pv/energycounter_today/get` | Energy today in Wh |
 | `smart-plug-pv/energycounter/get` | Total energy in Wh |
 
+## Pre-built binaries
+
+The `bin/` and `lib/` directories contain pre-built binaries for the **Toon** (Freescale i.MX6, ARMv7, musl libc), compiled with WolfSSL for TLS support:
+
+| File | Description |
+|---|---|
+| `bin/mosquitto` | MQTT broker |
+| `bin/mosquitto_pub` | MQTT publish client |
+| `bin/mosquitto_sub` | MQTT subscribe client |
+| `lib/libwolfssl.so.44.2.0` | WolfSSL TLS runtime |
+| `lib/libc.so` | musl libc runtime |
+
+The broker and clients are optional — if you already have mosquitto running on your network, only `mqtt-solar-bridge` itself is needed.
+
 ## Installation on Toon
 
-1. Copy the script to the Toon:
+1. Copy everything to the Toon's data partition:
    ```sh
    cp mqtt-solar-bridge /mnt/data/tsc/mqtt-solar-bridge
-   chmod +x /mnt/data/tsc/mqtt-solar-bridge
+   cp bin/mosquitto bin/mosquitto_pub bin/mosquitto_sub /mnt/data/tsc/mosquitto/
+   cp lib/libwolfssl.so.44.2.0 lib/libc.so /mnt/data/tsc/lib/
+   cp mosquitto.conf.example /mnt/data/tsc/mosquitto/mosquitto.conf
    ```
 
-2. Copy and edit the config (only needed if defaults don't work):
+2. Copy and edit the bridge config (only needed if defaults don't work):
    ```sh
    cp mqtt-solar-bridge.conf.example /mnt/data/tsc/mqtt-solar-bridge.conf
    ```
 
-3. The `S99tsc.sh` script in [toon-config](https://github.com/grmt/toon-config) installs and starts it automatically via `/etc/inittab`.
+3. The `S99tsc.sh` script in [toon-config](https://github.com/grmt/toon-config) installs the binaries to their runtime locations and starts everything automatically via `/etc/inittab`.
 
 ## Configuration
 

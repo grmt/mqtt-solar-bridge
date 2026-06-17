@@ -1,2 +1,4 @@
-# Actual config file — contains credentials, never commit this
+# Actual config files — contain credentials, never commit these
 mqtt-solar-bridge.conf
+mosquitto.conf
+mosquitto.passwd

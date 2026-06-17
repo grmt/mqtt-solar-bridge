@@ -1,0 +1,23 @@
+# Port 1883: unencrypted, local network only (smart plugs, local tools)
+listener 1883 0.0.0.0
+allow_anonymous true
+
+# Port 8883: TLS, open to all (certificate-authenticated transport)
+listener 8883 0.0.0.0
+cafile /etc/mosquitto/certs/ca.crt
+certfile /etc/mosquitto/certs/server.crt
+keyfile /etc/mosquitto/certs/server.key
+tls_version tlsv1.2
+allow_anonymous true
+
+# Mosquitto process user
+user mosquitto
+
+# No persistence — spare the Toon's flash
+persistence false
+
+# Logging
+log_dest file /var/log/mosquitto.log
+log_type error
+log_type warning
+log_type notice
