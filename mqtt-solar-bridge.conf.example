@@ -1,0 +1,18 @@
+# MQTT broker host and port (defaults: localhost, 1883)
+#MQTT_HOST=localhost
+#MQTT_PORT=1883
+
+# Credentials (leave commented out if not required)
+#MQTT_USER=
+#MQTT_PASS=
+
+# Base topic of the smart plug (default: smart-plug-pv)
+# The bridge subscribes to $MQTT_BASE_TOPIC/#
+#MQTT_BASE_TOPIC=smart-plug-pv
+
+# TLS/MQTTS — set to true to enable; default port becomes 8883
+#MQTT_TLS=false
+#MQTT_CAFILE=/path/to/ca.crt   # omit to use OS certificate store
+
+# Path where solar.json is written (must be served by the Toon web server)
+#JSONFILE=/qmf/www/tsc/solar.json

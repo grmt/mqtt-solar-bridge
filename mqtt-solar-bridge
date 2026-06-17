@@ -1,0 +1,42 @@
+#!/bin/sh
+CONF=/mnt/data/tsc/mqtt-solar-bridge.conf
+[ -f "$CONF" ] && . "$CONF"
+
+MQTT_HOST="${MQTT_HOST:-localhost}"
+MQTT_BASE_TOPIC="${MQTT_BASE_TOPIC:-smart-plug-pv}"
+JSONFILE="${JSONFILE:-/qmf/www/tsc/solar.json}"
+
+ARGS="-h $MQTT_HOST"
+[ -n "$MQTT_PORT" ] && ARGS="$ARGS -p $MQTT_PORT"
+[ -n "$MQTT_USER" ] && ARGS="$ARGS -u $MQTT_USER"
+[ -n "$MQTT_PASS" ] && ARGS="$ARGS -P $MQTT_PASS"
+if [ "${MQTT_TLS:-false}" = "true" ]; then
+    if [ -n "$MQTT_CAFILE" ]; then
+        ARGS="$ARGS --cafile $MQTT_CAFILE"
+    else
+        ARGS="$ARGS --tls-use-os-certs"
+    fi
+    ARGS="$ARGS -p ${MQTT_PORT:-8883}"
+fi
+
+power=0
+energy_today=0
+energy_total=0
+
+write_json() {
+    printf '{"power":%.2f,"energy_today":%.3f,"energy_total":%.3f}\n' \
+        "$power" "$energy_today" "$energy_total" > "$JSONFILE"
+}
+
+write_json
+
+# shellcheck disable=SC2086
+mosquitto_sub $ARGS -t "$MQTT_BASE_TOPIC/#" -v | while read -r topic value; do
+    case "$topic" in
+        "$MQTT_BASE_TOPIC/power/get")                power="$value" ;;
+        "$MQTT_BASE_TOPIC/energycounter_today/get")  energy_today="$value" ;;
+        "$MQTT_BASE_TOPIC/energycounter/get")        energy_total="$value" ;;
+        *) continue ;;
+    esac
+    write_json
+done
